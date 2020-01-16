@@ -2,7 +2,9 @@
 const express = require("express");
 const server = express();
 const Users = require("./data/db.js");
+const cors = require("cors")
 server.use(express.json());
+server.use(cors())
 const port = 8000;
 
 //get
@@ -55,12 +57,10 @@ server.post("/api/users", (req, res) => {
     })
     .catch(err => {
       console.log("errr", err);
-      res
-        .status(500)
-        .json({
-          errorMessage:
-            "there was an error while saving the user to the database "
-        });
+      res.status(500).json({
+        errorMessage:
+          "there was an error while saving the user to the database "
+      });
     });
 });
 
@@ -71,10 +71,9 @@ server.delete(`/api/users/:id`, (req, res) => {
     .then(user => {
       console.log(Users, user, id);
 
-      if (user === 0) res.status(404).json({ errorMessage: "something" });
+      if (user === 0) res.status(404).json({ errorMessage: "no user with the id" });
       res
-        .status(200)
-        .json({ successMessage: `the object with the id of ${id}` });
+        .status(200).json({ successMessage: `the object with the id of ${id} has been deleted` });
     })
     .catch(err => {
       console.log("err", err);
@@ -89,7 +88,7 @@ server.put("/api/users/:id", (req, res) => {
   if (!userData.name || !userData.bio)
     res
       .status(400)
-      .json({ errorMessage: "pplease provide name and bio for the user" });
+      .json({ errorMessage: "please provide name and bio for the user" });
   else {
     Users.update(id, userData)
       .then(updated => {
@@ -98,8 +97,7 @@ server.put("/api/users/:id", (req, res) => {
           res
             .status(404)
             .json({ message: "the user with the specified id doens't exist " });
-        } 
-         else res.status(204).json(updated);
+        } else res.status(204).json(updated);
       })
       .catch(err => {
         console.log("err", err);
