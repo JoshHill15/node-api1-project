@@ -5,7 +5,7 @@ const Users = require("./data/db.js");
 const cors = require("cors")
 server.use(express.json());
 server.use(cors())
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 //get
 server.get("/", (req, res) => {
